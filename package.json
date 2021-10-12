@@ -1,0 +1,42 @@
+{
+  "name": "cloudflare-discord-bot",
+  "version": "1.0.0",
+  "description": "A framework to build Discord Bots on top of Cloudflare Workers.",
+  "author": "alvgaona@gmail.com",
+  "license": "GNU GENERAL PUBLIC LICENSE v3.0",
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "typescript",
+      "prettier"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:alvgaona/cloudflare-discord-bot.git"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^2.2.2",
+    "@types/jest": "^26.0.23",
+    "@types/lodash": "^4.14.172",
+    "@types/node": "^16.7.10",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "eslint": "^7.21.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-config-typescript": "^3.0.0",
+    "prettier": "^2.3.0",
+    "ts-loader": "^9.2.2",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "itty-router": "^2.4.2",
+    "tweetnacl": "^1.0.3"
+  },
+  "scripts": {
+    "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
+    "lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
+    "test": "echo \"No tests specified\""
+  }
+}
