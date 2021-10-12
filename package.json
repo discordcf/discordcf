@@ -16,10 +16,6 @@
     "url": "git+ssh://git@github.com:alvgaona/cloudflare-discord-bot.git"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^2.2.2",
-    "@types/jest": "^26.0.23",
-    "@types/lodash": "^4.14.172",
-    "@types/node": "^16.7.10",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
     "eslint": "^7.21.0",
