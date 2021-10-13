@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "esnext",
-    "lib": ["esnext", "webworker"],
+    "target": "ES6",
     "alwaysStrict": true,
     "strict": true,
     "preserveConstEnums": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "esModuleInterop": true,
+    "rootDir": "src"
   },
   "include": ["src"],
-  "exclude": ["node_modules/**"]
+  "exclude": ["node_modules/**", "dist"]
 }

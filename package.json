@@ -1,9 +1,13 @@
 {
   "name": "cloudflare-discord-bot",
-  "version": "1.0.1",
+  "version": "0.0.1",
   "description": "A framework to build Discord Bots on top of Cloudflare Workers.",
   "author": "alvgaona@gmail.com",
   "license": "GNU GENERAL PUBLIC LICENSE v3.0",
+  "main": "dist/index.js",
+  "files": [
+    "/dist"
+  ],
   "eslintConfig": {
     "root": true,
     "extends": [
