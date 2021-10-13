@@ -1,5 +1,7 @@
-import { btoa } from '../utils/utils';
+import { Buffer } from 'buffer';
 import { ApplicationCommand, InteractionHandler } from "./types";
+
+const btoa = (value: string) => Buffer.from(value, "binary").toString("base64");
 
 const getAuthorizationCode = async (headers: any) => {
   headers['Content-Type'] = 'application/x-www-form-urlencoded'
