@@ -5,6 +5,7 @@
   "author": "alvgaona@gmail.com",
   "license": "GNU GENERAL PUBLIC LICENSE v3.0",
   "main": "dist/index.js",
+  "types": "dist",
   "files": [
     "/dist"
   ],
@@ -35,6 +36,7 @@
     "tweetnacl": "^1.0.3"
   },
   "scripts": {
+    "build": "tsc -p .",
     "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "test": "echo \"No tests specified\""
