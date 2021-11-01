@@ -44,7 +44,7 @@ import {
     createApplicationCommandHandler,
     Permissions,
     PermissionType 
-} from 'cloudflare-discord-bot;
+} from 'cloudflare-discord-bot';
 
 declare const CLIENT_ID: string;
 declare const CLIENT_SECRET: string;
