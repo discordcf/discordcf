@@ -123,7 +123,7 @@ There are many ways of contributing to it:
 
 ## License :scroll:
 
-Licensed under the [GPLv3 license].
+Licensed under the [Apache License 2.0].
 
 [@glenstack/cf-workers-discord-bot]: https://github.com/glenstack/glenstack/tree/master/packages/cf-workers-discord-bot
-[GPLv3 license]: ./LICENSE
+[Apache Licence 2.0]: ./LICENSE
