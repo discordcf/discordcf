@@ -126,4 +126,4 @@ There are many ways of contributing to it:
 Licensed under the [Apache License 2.0].
 
 [@glenstack/cf-workers-discord-bot]: https://github.com/glenstack/glenstack/tree/master/packages/cf-workers-discord-bot
-[Apache Licence 2.0]: ./LICENSE
+[Apache License 2.0]: ./LICENSE
