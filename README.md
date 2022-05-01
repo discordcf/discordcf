@@ -111,6 +111,10 @@ export const helloHandler: InteractionHandler = async (
 };
 ```
 
+## Example of bots
+
+- [Mixurri: A chatbot to organize 5v5 matches.][Mixurri]
+
 ## Contributing :handshake:
 
 Contribution is pretty simple.
@@ -127,3 +131,5 @@ Licensed under the [Apache License 2.0].
 
 [@glenstack/cf-workers-discord-bot]: https://github.com/glenstack/glenstack/tree/master/packages/cf-workers-discord-bot
 [Apache License 2.0]: ./LICENSE
+[Mixurri]: https://github.com/alvgaona/mixurri.git
+
