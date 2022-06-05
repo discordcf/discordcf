@@ -2,55 +2,55 @@ name: 🐛 Bug Report
 description: Sumbit a bug report to help us improve
 labels: ["defect"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
-  - type: textarea
-    id: brief-description
-    attributes:
-      label: Description
-      description: A brief and concise description of what the bug is.
-      placeholder: Insert description.
-    validations:
-      required: true
-  - type: textarea
-    id: reproducibility
-    attributes:
-      label: Reproducibility
-      description: Describe the steps to reproduce the bug
-      placeholder: Define steps.
-  - type: dropdown
-    id: version
-    attributes:
-      label: Version
-      description: What version of the framework are you using?
-      options:
-        - 0.0.1 (latest)
-    validations:
-      required: true
-  - type: dropdown
-    id: browsers
-    attributes:
-      label: What browsers are you seeing the problem on?
-      multiple: true
-      options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
-  - type: textarea
+ - type: markdown
+   attributes:
+    value: |
+     Thanks for taking the time to fill out this bug report!
+ - type: textarea
+   id: brief-description
+   attributes:
+    label: Description
+    description: A brief and concise description of what the bug is.
+    placeholder: Insert description.
+   validations:
+    required: true
+ - type: textarea
+   id: reproducibility
+   attributes:
+    label: Reproducibility
+    description: Describe the steps to reproduce the bug
+    placeholder: Define steps.
+ - type: dropdown
+   id: version
+   attributes:
+    label: Version
+    description: What version of the framework are you using?
+    options:
+     - 0.0.1 (latest)
+   validations:
+    required: true
+ - type: dropdown
+   id: browsers
+   attributes:
+    label: What browsers are you seeing the problem on?
+    multiple: true
+    options:
+     - Firefox
+     - Chrome
+     - Safari
+     - Microsoft Edge
+ - type: textarea
+   id: logs
+   attributes:
     id: logs
-    attributes:
-      id: logs
-      label: Log output
-      description: Any relevant log output that you might consider insightful.
-      render: shell
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](../../CODE_OF_CONDUCT.md)
-      options:
-        - label: I agree to follow this project's Code of Conduct
-          required: true
+    label: Log output
+    description: Any relevant log output that you might consider insightful.
+    render: shell
+ - type: checkboxes
+   id: terms
+   attributes:
+    label: Code of Conduct
+    description: By submitting this issue, you agree to follow our [Code of Conduct](../../CODE_OF_CONDUCT.md)
+    options:
+     - label: I agree to follow this project's Code of Conduct
+       required: true
