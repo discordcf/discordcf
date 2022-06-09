@@ -4,7 +4,7 @@ export const authorize = (applicationId: string, permissions: Permissions) => as
   const urlSearchParams = new URLSearchParams({
     client_id: applicationId,
     scope: "bot applications.commands",
-    permissions: permissions.compute()
+    permissions: permissions.compute(),
   });
 
   const redirectURL = new URL(`https://discord.com/oauth2/authorize`);

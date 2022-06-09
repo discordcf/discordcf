@@ -1,18 +1,18 @@
 {
-  "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "alwaysStrict": true,
-    "strict": true,
-    "preserveConstEnums": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "rootDir": "src",
-    "outDir": "dist"
-  },
-  "include": ["src"],
-  "exclude": ["node_modules/**", "dist/"]
+	"compilerOptions": {
+		"target": "es2020",
+		"module": "commonjs",
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"alwaysStrict": true,
+		"strict": true,
+		"preserveConstEnums": true,
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"rootDir": "src",
+		"outDir": "dist"
+	},
+	"include": ["src"],
+	"exclude": ["node_modules/**", "dist/"]
 }

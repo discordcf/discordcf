@@ -2,33 +2,32 @@ name: 🚀 Feature request
 description: Sumbit a feature or enhancement request
 labels: ["feature"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for contributing with ideas!
-  - type: textarea
-    id: brief-description
-    attributes:
-      label: Summary
-      description: An overall description of the involved feature.
-    validations:
-      required: true
-  - type: textarea
-    id: outcome
-    attributes:
-      label: Intended Outcome
-      description: Write a description of how you imagine the outcome of the feature.
-  - type: textarea
-    id: functionality
-    attributes:
-      label: How will it work?
-      description: Write a description of how this feature will work. The more details in the description, the better.
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](../../CODE_OF_CONDUCT.md)
-      options:
-        - label: I agree to follow this project's Code of Conduct
-          required: true
-
+ - type: markdown
+   attributes:
+    value: |
+     Thanks for contributing with ideas!
+ - type: textarea
+   id: brief-description
+   attributes:
+    label: Summary
+    description: An overall description of the involved feature.
+   validations:
+    required: true
+ - type: textarea
+   id: outcome
+   attributes:
+    label: Intended Outcome
+    description: Write a description of how you imagine the outcome of the feature.
+ - type: textarea
+   id: functionality
+   attributes:
+    label: How will it work?
+    description: Write a description of how this feature will work. The more details in the description, the better.
+ - type: checkboxes
+   id: terms
+   attributes:
+    label: Code of Conduct
+    description: By submitting this issue, you agree to follow our [Code of Conduct](../../CODE_OF_CONDUCT.md)
+    options:
+     - label: I agree to follow this project's Code of Conduct
+       required: true
