@@ -234,4 +234,4 @@ export type InteractionResponse = {
   data?: InteractionApplicationCommandCallbackData;
 };
 
-export type InteractionHandler = (interaction: Interaction) => Promise<InteractionResponse> | InteractionResponse;
+export type InteractionHandler = (interaction: Interaction, ...extra: any) => Promise<InteractionResponse> | InteractionResponse;

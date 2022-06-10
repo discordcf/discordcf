@@ -28,5 +28,5 @@ export const createApplicationCommandHandler = (application: Application) => {
       commands: application.commands,
     })
   );
-  return (request: Request) => router.handle(request);
+  return router.handle;
 };
