@@ -30,7 +30,7 @@ const DEFAULT_HANDLER: InteractionHandler = () => ({
 });
 
 export const interaction = ({ publicKey, commands }: { publicKey: string; commands: [ApplicationCommand, InteractionHandler][] }) => {
-  return async (request: Request): Promise<Response> => {
+  return async (request: Request, ...extra: any): Promise<Response> => {
     const validateRequest = makeValidator({ publicKey });
 
     try {
@@ -46,7 +46,7 @@ export const interaction = ({ publicKey, commands }: { publicKey: string; comman
             ([command, handler]: [ApplicationCommand, InteractionHandler]) => command.name === interaction.data?.name
           ) || [DEFAULT_COMMAND, DEFAULT_HANDLER];
 
-          return jsonResponse(await handler(interaction));
+          return jsonResponse(await handler(interaction, ...extra));
         }
       } catch (e: any) {
         console.log(e.message);
