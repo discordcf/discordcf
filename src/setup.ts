@@ -79,20 +79,25 @@ const createCommands = async (
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${bearer}` },
     });
 
-    const error = new Error(`Setting command ${command.name} failed!`);
-
     try {
       const response = await fetch(request);
 
-      if (!response.ok) throw error;
-      return response;
-    } catch (e) {
-      throw error;
+      return { [command.name]: await response.json() };
+    } catch (e: unknown) {
+      // e is typeof unknown due to error handling. We expect it to be a Error, if its not then the message and stack properties should be undefined and not used.
+      const { message, stack } = <Error>e;
+      return {
+        [command.name]: {
+          message,
+          stack,
+          info: `Setting command ${command.name} failed!`,
+        },
+      };
     }
   });
 
   return await Promise.all(promises)
-    .then(() => new Response("OK"))
+    .then((result) => new Response(JSON.stringify(result.reduce((acc, cur) => ({ ...acc, ...cur }), {}))))
     .catch((e) => new Response(e.message, { status: 502 }));
 };
 
