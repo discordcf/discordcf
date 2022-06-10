@@ -99,6 +99,8 @@ export type ApplicationCommandInteractionData = {
   id: string;
   name: string;
   options?: ApplicationCommandInteractionDataOption[];
+  custom_id?: string;
+  component_type: number;
   resolved?: any;
 };
 

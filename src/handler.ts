@@ -13,20 +13,25 @@ export type Application = {
   publicKey: string;
   guildId?: string;
   commands: [ApplicationCommand, InteractionHandler][];
+  components?: { [key: string]: InteractionHandler };
   permissions: Permissions;
 };
 
+export type DictCommands = Record<
+  string,
+  {
+    command: ApplicationCommand;
+    handler: InteractionHandler;
+  }
+>;
+
 export const createApplicationCommandHandler = (application: Application) => {
   router.get("/", authorize(application.applicationId, application.permissions));
-  router.post("/interaction", interaction({ publicKey: application.publicKey, commands: application.commands }));
-  router.get(
-    "/setup",
-    setup({
-      applicationId: application.applicationId,
-      applicationSecret: application.applicationSecret,
-      guildId: application.guildId,
-      commands: application.commands,
-    })
-  );
+  const commands = application.commands.reduce((_commands, command) => {
+    _commands[command[0].name] = { command: command[0], handler: command[1] };
+    return _commands;
+  }, <DictCommands>{});
+  router.post("/interaction", interaction({ publicKey: application.publicKey, commands, components: application.components }));
+  router.get("/setup", setup(application));
   return router.handle;
 };

@@ -1,4 +1,5 @@
 import { Buffer } from "buffer";
+import type { Application } from "./handler";
 import { ApplicationCommand, InteractionHandler } from "./types";
 
 const btoa = (value: string) => Buffer.from(value, "binary").toString("base64");
@@ -101,17 +102,7 @@ const createCommands = async (
     .catch((e) => new Response(e.message, { status: 502 }));
 };
 
-export const setup = ({
-  applicationId,
-  applicationSecret,
-  guildId,
-  commands,
-}: {
-  applicationId: string;
-  applicationSecret: string;
-  guildId?: string;
-  commands: [ApplicationCommand, InteractionHandler][];
-}) => {
+export const setup = ({ applicationId, applicationSecret, guildId, commands }: Application) => {
   const authorization = btoa(unescape(encodeURIComponent(applicationId + ":" + applicationSecret)));
 
   const headers = {

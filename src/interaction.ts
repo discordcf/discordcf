@@ -1,6 +1,7 @@
 import nacl from "tweetnacl";
 import { Buffer } from "buffer";
 import { ApplicationCommand, InteractionHandler, Interaction, InteractionType, InteractionResponseType } from "./types";
+import type { DictCommands } from "./handler";
 
 const makeValidator =
   ({ publicKey }: { publicKey: string }) =>
@@ -20,34 +21,42 @@ const jsonResponse = (data: any) =>
     headers: { "Content-Type": "application/json" },
   });
 
-const DEFAULT_COMMAND: ApplicationCommand = {
-  name: "",
-  description: "",
-};
-
-const DEFAULT_HANDLER: InteractionHandler = () => ({
-  type: InteractionResponseType.Pong,
-});
-
-export const interaction = ({ publicKey, commands }: { publicKey: string; commands: [ApplicationCommand, InteractionHandler][] }) => {
+export const interaction = ({
+  publicKey,
+  commands,
+  components = {},
+}: {
+  publicKey: string;
+  commands: DictCommands;
+  components?: { [key: string]: InteractionHandler };
+}) => {
   return async (request: Request, ...extra: any): Promise<Response> => {
     const validateRequest = makeValidator({ publicKey });
 
     try {
       await validateRequest(request.clone());
-
       try {
         const interaction = (await request.json()) as Interaction;
 
-        if (interaction.type == InteractionType.Ping) {
-          return jsonResponse({ type: 1 });
-        } else if (interaction.type == InteractionType.ApplicationCommand) {
-          const [command, handler]: [ApplicationCommand, InteractionHandler] = commands.find(
-            ([command, handler]: [ApplicationCommand, InteractionHandler]) => command.name === interaction.data?.name
-          ) || [DEFAULT_COMMAND, DEFAULT_HANDLER];
+        let handler: InteractionHandler;
 
-          return jsonResponse(await handler(interaction, ...extra));
+        switch (interaction.type) {
+          case InteractionType.Ping: {
+            return jsonResponse({ type: 1 });
+          }
+          case InteractionType.ApplicationCommand: {
+            if (interaction.data?.name === undefined) break;
+            handler = commands[interaction.data.name].handler;
+            break;
+          }
+          case InteractionType.MessageComponent: {
+            if (interaction.data?.custom_id === undefined) break;
+            handler = components[interaction.data.custom_id];
+            break;
+          }
         }
+        if (handler! === undefined) return new Response(null, { status: 500 });
+        return jsonResponse(await handler(interaction, ...extra));
       } catch (e: any) {
         console.log(e.message);
         return new Response(null, { status: 400 });
