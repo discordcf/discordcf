@@ -11,7 +11,7 @@ export const authorize = (applicationId: string, permissions: Permissions) => as
   redirectURL.search = urlSearchParams.toString();
 
   return new Response(null, {
-    status: 301,
+    status: 302,
     headers: { Location: redirectURL.toString() },
   });
 };
