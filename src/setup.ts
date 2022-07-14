@@ -11,22 +11,21 @@ const resolveCommandsEndpoint = (applicationId: string, guildId?: string): strin
 const deleteExistingCommands = async (applicationId: string, applicationSecret: string, guildId?: string): Promise<void> => {
   const url = resolveCommandsEndpoint(applicationId, guildId);
 
-  const response = await fetch(
-    new Request(url, {
-      method: "GET",
-      headers: { "Content-Type": "application/json", Authorization: `Bot ${applicationSecret}` },
-    })
-  );
-  const commands = <RESTGetAPIApplicationCommandsResult>await response.json();
+  const commands = await fetch(url, {
+    method: "GET",
+    headers: { "Content-Type": "application/json", Authorization: `Bot ${applicationSecret}` },
+  }).then((res) => res.json() as Promise<RESTGetAPIApplicationCommandsResult>);
 
-  await Promise.all(
+  const result = await Promise.all(
     commands.map((command) =>
       fetch(`${url}/${command.id}`, {
         method: "DELETE",
         headers: { Authorizaton: `Bot ${applicationSecret}` },
-      })
+      }).then((res) => res.text())
     )
   );
+
+  console.log(url, commands, result);
 };
 
 type createCommandsArgs = {
@@ -38,14 +37,12 @@ const createCommands = async ({ applicationId, guildId, commands }: createComman
   const url = resolveCommandsEndpoint(applicationId, guildId);
 
   const promises = commands.map(async ([command, handler]) => {
-    const request = new Request(url, {
-      method: "POST",
-      body: JSON.stringify(command),
-      headers: { "Content-Type": "application/json", Authorization: `Bot ${applicationSecret}` },
-    });
-
     try {
-      const response = await fetch(request);
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(command),
+        headers: { "Content-Type": "application/json", Authorization: `Bot ${applicationSecret}` },
+      });
 
       return { [command.name!]: await response.json() };
     } catch (e: unknown) {
@@ -69,7 +66,7 @@ const createCommands = async ({ applicationId, guildId, commands }: createComman
 export const setup = ({ applicationId, applicationSecret, guildId, commands }: Application) => {
   return async (): Promise<Response> => {
     try {
-      await deleteExistingCommands(applicationId, applicationSecret);
+      await deleteExistingCommands(applicationId, applicationSecret, guildId);
       return await createCommands({ applicationId, guildId, commands }, applicationSecret);
     } catch {
       return new Response(JSON.stringify({ error: "Failed to authenticate with Discord. Are the Application ID and secret set correctly?" }), {
