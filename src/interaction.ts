@@ -1,7 +1,38 @@
 import nacl from "tweetnacl";
 import { Buffer } from "buffer";
-import { ApplicationCommand, InteractionHandler, Interaction, InteractionType, InteractionResponseType } from "./types";
+
 import type { DictCommands } from "./handler";
+import {
+	APIMessageComponentInteraction as ComponentInteraction,
+	APIApplicationCommandInteraction as CommandInteraction,
+	APIApplicationCommandInteractionWrapper as CommandInteractionWithData,
+	APIInteractionResponse,
+	APIInteraction,
+	InteractionType,
+	APIChatInputApplicationCommandInteractionData as ChatInputData,
+	APIContextMenuInteractionData as MenuInteractionData,
+} from "discord-api-types/payloads";
+
+export enum InteractionDataType {
+	// APIChatInputApplicationCommandInteractionData
+	ChatInput,
+	// APIContextMenuInteractionData
+	ContextMenu,
+}
+
+type InteractionDataLookup = {
+	[InteractionDataType.ChatInput]: CommandInteractionWithData<ChatInputData>;
+	[InteractionDataType.ContextMenu]: CommandInteractionWithData<MenuInteractionData>;
+};
+
+type InteractionResponse = Promise<APIInteractionResponse> | APIInteractionResponse;
+
+export type CommandInteractionHandlerWithData<DataType extends InteractionDataType> = (
+	interaction: InteractionDataLookup[DataType],
+	...extra: any
+) => InteractionResponse;
+export type CommandInteractionHandler = (interaction: CommandInteraction, ...extra: any) => InteractionResponse;
+export type ComponentInteractionHandler = (interaction: Partial<ComponentInteraction>, ...extra: any) => InteractionResponse;
 
 const makeValidator =
   ({ publicKey }: { publicKey: string }) =>
@@ -26,19 +57,19 @@ export const interaction = ({
   commands,
   components = {},
 }: {
-  publicKey: string;
-  commands: DictCommands;
-  components?: { [key: string]: InteractionHandler };
+	publicKey: string;
+	commands: DictCommands;
+	components?: { [key: string]: ComponentInteractionHandler };
 }) => {
   return async (request: Request, ...extra: any): Promise<Response> => {
     const validateRequest = makeValidator({ publicKey });
 
-    try {
-      await validateRequest(request.clone());
-      try {
-        const interaction = (await request.json()) as Interaction;
+		try {
+			await validateRequest(request.clone());
+			try {
+				const interaction = (await request.json()) as APIInteraction;
 
-        let handler: InteractionHandler;
+				let handler: (...args: any[]) => InteractionResponse;
 
         switch (interaction.type) {
           case InteractionType.Ping: {

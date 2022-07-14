@@ -29,6 +29,7 @@
 	},
 	"dependencies": {
 		"buffer": "^6.0.3",
+		"discord-api-types": "^0.33.5",
 		"itty-router": "^2.6.1",
 		"tweetnacl": "^1.0.3"
 	},
