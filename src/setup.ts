@@ -1,47 +1,20 @@
-import { Buffer } from "buffer";
-import { OAuth2Routes, Routes, RouteBases } from "discord-api-types/v10";
+import { Routes, RouteBases } from "discord-api-types/v10";
 import { RESTGetAPIApplicationCommandsResult } from "discord-api-types/v10";
 
 import type { Application, Command } from "./handler";
-
-const btoa = (value: string) => Buffer.from(value, "binary").toString("base64");
-
-const getAuthorizationCode = async (headers: any) => {
-  headers["Content-Type"] = "application/x-www-form-urlencoded";
-
-  const request = new Request(OAuth2Routes.tokenURL, {
-    method: "POST",
-    body: new URLSearchParams({
-      grant_type: "client_credentials",
-      scope: "applications.commands.update",
-    }).toString(),
-    headers: headers,
-  });
-
-  const response = await fetch(request);
-
-  if (!response.ok) throw new Error("Failed to request an Authorization code.");
-
-  try {
-    const data = await response.json();
-    return data.access_token;
-  } catch {
-    throw new Error("Failed to parse the Authorization code response.");
-  }
-};
 
 const resolveCommandsEndpoint = (applicationId: string, guildId?: string): string => {
   if (guildId !== undefined) return RouteBases.api + Routes.applicationGuildCommands(applicationId, guildId);
   return RouteBases.api + Routes.applicationCommands(applicationId);
 };
 
-const deleteExistingCommands = async (applicationId: string, bearer: any, guildId?: string): Promise<void> => {
+const deleteExistingCommands = async (applicationId: string, applicationSecret: string, guildId?: string): Promise<void> => {
   const url = resolveCommandsEndpoint(applicationId, guildId);
 
   const response = await fetch(
     new Request(url, {
       method: "GET",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${bearer}` },
+      headers: { "Content-Type": "application/json", Authorization: `Bot ${applicationSecret}` },
     })
   );
   const commands = <RESTGetAPIApplicationCommandsResult>await response.json();
@@ -50,7 +23,7 @@ const deleteExistingCommands = async (applicationId: string, bearer: any, guildI
     commands.map((command) =>
       fetch(`${url}/${command.id}`, {
         method: "DELETE",
-        headers: { Authorizaton: `Bearer ${bearer}` },
+        headers: { Authorizaton: `Bot ${applicationSecret}` },
       })
     )
   );
@@ -61,14 +34,14 @@ type createCommandsArgs = {
   guildId?: string;
   commands: Command<any>[];
 };
-const createCommands = async ({ applicationId, guildId, commands }: createCommandsArgs, bearer: any): Promise<Response> => {
+const createCommands = async ({ applicationId, guildId, commands }: createCommandsArgs, applicationSecret: string): Promise<Response> => {
   const url = resolveCommandsEndpoint(applicationId, guildId);
 
   const promises = commands.map(async ([command, handler]) => {
     const request = new Request(url, {
       method: "POST",
       body: JSON.stringify(command),
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${bearer}` },
+      headers: { "Content-Type": "application/json", Authorization: `Bot ${applicationSecret}` },
     });
 
     try {
@@ -94,18 +67,10 @@ const createCommands = async ({ applicationId, guildId, commands }: createComman
 };
 
 export const setup = ({ applicationId, applicationSecret, guildId, commands }: Application) => {
-  const authorization = btoa(unescape(encodeURIComponent(applicationId + ":" + applicationSecret)));
-
-  const headers = {
-    Authorization: `Basic ${authorization}`,
-  };
-
   return async (): Promise<Response> => {
     try {
-      const bearer = await getAuthorizationCode(headers);
-
-      await deleteExistingCommands(applicationId, bearer);
-      return await createCommands({ applicationId, guildId, commands }, bearer);
+      await deleteExistingCommands(applicationId, applicationSecret);
+      return await createCommands({ applicationId, guildId, commands }, applicationSecret);
     } catch {
       return new Response(JSON.stringify({ error: "Failed to authenticate with Discord. Are the Application ID and secret set correctly?" }), {
         status: 407,
