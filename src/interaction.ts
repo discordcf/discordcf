@@ -34,68 +34,55 @@ export type CommandInteractionHandlerWithData<DataType extends InteractionDataTy
 export type CommandInteractionHandler = (interaction: CommandInteraction, ...extra: any) => InteractionResponse;
 export type ComponentInteractionHandler = (interaction: Partial<ComponentInteraction>, ...extra: any) => InteractionResponse;
 
-const makeValidator =
-  ({ publicKey }: { publicKey: string }) =>
-  async (request: Request) => {
-    const headers = Object.fromEntries(request.headers);
-    const signature = String(headers["x-signature-ed25519"]);
-    const timestamp = String(headers["x-signature-timestamp"]);
-    const body = await request.json();
+const validateRequest = async (request: Request, publicKey: string) => {
+  const signature = request.headers.get("x-signature-ed25519");
+  const timestamp = request.headers.get("x-signature-timestamp");
 
-    const isValid = nacl.sign.detached.verify(Buffer.from(timestamp + JSON.stringify(body)), Buffer.from(signature, "hex"), Buffer.from(publicKey, "hex"));
+  if (signature === null || timestamp === null) return false;
 
-    if (!isValid) throw new Error("Invalid request");
-  };
+  return nacl.sign.detached.verify(Buffer.from(timestamp + (await request.text())), Buffer.from(signature, "hex"), Buffer.from(publicKey, "hex"));
+};
 
 const jsonResponse = (data: any) =>
   new Response(JSON.stringify(data), {
     headers: { "Content-Type": "application/json" },
   });
 
-export const interaction = ({
-  publicKey,
-  commands,
-  components = {},
-}: {
+type InteractionArgs = {
   publicKey: string;
   commands: DictCommands;
   components?: { [key: string]: ComponentInteractionHandler };
-}) => {
-  return async (request: Request, ...extra: any): Promise<Response> => {
-    const validateRequest = makeValidator({ publicKey });
-
-    try {
-      await validateRequest(request.clone());
-      try {
-        const interaction = (await request.json()) as APIInteraction;
-
-        let handler: (...args: any[]) => InteractionResponse;
-
-        switch (interaction.type) {
-          case InteractionType.Ping: {
-            return jsonResponse({ type: 1 });
-          }
-          case InteractionType.ApplicationCommand: {
-            if (interaction.data?.name === undefined) break;
-            handler = commands[interaction.data.name].handler;
-            break;
-          }
-          case InteractionType.MessageComponent: {
-            if (interaction.data?.custom_id === undefined) break;
-            handler = components[interaction.data.custom_id];
-            break;
-          }
-        }
-        if (handler! === undefined) return new Response(null, { status: 500 });
-        return jsonResponse(await handler(interaction, ...extra));
-      } catch (e: any) {
-        console.log(e.message);
-        return new Response(null, { status: 400 });
-      }
-    } catch (e: any) {
-      console.error(e.message);
-      return new Response(null, { status: 401 });
-    }
-    return new Response(null, { status: 500 });
-  };
 };
+export const interaction =
+  ({ publicKey, commands, components = {} }: InteractionArgs) =>
+  async (request: Request, ...extra: any): Promise<Response> => {
+    try {
+      const requestValid = await validateRequest(request.clone(), publicKey);
+      if (!requestValid) return new Response(null, { status: 401 });
+
+      const interaction: APIInteraction = await request.json();
+
+      let handler: (...args: any[]) => InteractionResponse;
+
+      switch (interaction.type) {
+        case InteractionType.Ping: {
+          return jsonResponse({ type: 1 });
+        }
+        case InteractionType.ApplicationCommand: {
+          if (interaction.data?.name === undefined) break;
+          handler = commands[interaction.data.name].handler;
+          break;
+        }
+        case InteractionType.MessageComponent: {
+          if (interaction.data?.custom_id === undefined) break;
+          handler = components[interaction.data.custom_id];
+          break;
+        }
+      }
+      if (handler! === undefined) return new Response(null, { status: 404 });
+      return jsonResponse(await handler(interaction, ...extra));
+    } catch (e: any) {
+      console.error(e);
+      return new Response(null, { status: 500 });
+    }
+  };
