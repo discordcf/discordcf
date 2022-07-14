@@ -16,16 +16,14 @@ const deleteExistingCommands = async (applicationId: string, applicationSecret: 
     headers: { "Content-Type": "application/json", Authorization: `Bot ${applicationSecret}` },
   }).then((res) => res.json() as Promise<RESTGetAPIApplicationCommandsResult>);
 
-  const result = await Promise.all(
+  await Promise.all(
     commands.map((command) =>
       fetch(`${url}/${command.id}`, {
         method: "DELETE",
-        headers: { Authorizaton: `Bot ${applicationSecret}` },
-      }).then((res) => res.text())
+        headers: { Authorization: `Bot ${applicationSecret}` },
+      })
     )
   );
-
-  console.log(url, commands, result);
 };
 
 type createCommandsArgs = {
