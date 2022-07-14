@@ -10,35 +10,35 @@ import type { ApplicationCommand } from ".";
 const router = Router();
 
 export type Command<DataType extends InteractionDataType | void = void> = [
-	ApplicationCommand,
-	DataType extends InteractionDataType ? CommandInteractionHandlerWithData<DataType> : CommandInteractionHandler
+  ApplicationCommand,
+  DataType extends InteractionDataType ? CommandInteractionHandlerWithData<DataType> : CommandInteractionHandler
 ];
 
 export type Application = {
-	applicationId: string;
-	applicationSecret: string;
-	publicKey: string;
-	guildId?: string;
-	commands: Command<any>[];
-	components?: Record<string, ComponentInteractionHandler>;
-	permissions: Permissions;
+  applicationId: string;
+  applicationSecret: string;
+  publicKey: string;
+  guildId?: string;
+  commands: Command<any>[];
+  components?: Record<string, ComponentInteractionHandler>;
+  permissions: Permissions;
 };
 
 export type DictCommands = Record<
-	string,
-	{
-		command: ApplicationCommand;
-		handler: CommandInteractionHandler;
-	}
+  string,
+  {
+    command: ApplicationCommand;
+    handler: CommandInteractionHandler;
+  }
 >;
 
 export const createApplicationCommandHandler = (application: Application) => {
-	router.get("/", authorize(application.applicationId, application.permissions));
-	const commands = application.commands.reduce((_commands, command) => {
-		_commands[command[0].name!] = { command: command[0], handler: command[1] };
-		return _commands;
-	}, <DictCommands>{});
-	router.post("/interaction", interaction({ publicKey: application.publicKey, commands, components: application.components }));
-	router.get("/setup", setup(application));
-	return router.handle;
+  router.get("/", authorize(application.applicationId, application.permissions));
+  const commands = application.commands.reduce((_commands, command) => {
+    _commands[command[0].name!] = { command: command[0], handler: command[1] };
+    return _commands;
+  }, <DictCommands>{});
+  router.post("/interaction", interaction({ publicKey: application.publicKey, commands, components: application.components }));
+  router.get("/setup", setup(application));
+  return router.handle;
 };
