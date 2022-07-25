@@ -7,7 +7,6 @@ export class Permissions {
   compute() {
     let permission = 0n;
     this.types.forEach((type) => (permission += PermissionFlagsBits[type]));
-    console.log(permission, String(permission));
     return String(permission);
   }
 }
