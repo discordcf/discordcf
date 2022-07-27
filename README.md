@@ -39,7 +39,7 @@ Without worrying about the permission numbers Discord uses.
 ### `index.ts`
 
 ```typescript
-import { helloHanlder, helloCommand } from './hello';
+import { helloHandler, helloCommand } from './hello';
 import { 
     createApplicationCommandHandler,
     Permissions,
@@ -57,7 +57,7 @@ const applicationCommandHandler = createApplicationCommandHandler({
   commands: [
     [helloCommand, helloHandler],
   ],
-  guildId: "INSERT YOUR GUILD ID"  // Should only be used for development workers.
+  guildId: "INSERT YOUR GUILD ID",  // Should only be used for development workers.
   permissions: new Permissions(
     [
       PermissionType.ADD_REACTIONS,
