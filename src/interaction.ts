@@ -3,14 +3,14 @@ import { Buffer } from "buffer";
 
 import type { DictCommands } from "./handler";
 import {
-  APIMessageComponentInteraction as ComponentInteraction,
-  APIApplicationCommandInteraction as CommandInteraction,
-  APIApplicationCommandInteractionWrapper as CommandInteractionWithData,
+  APIMessageComponentInteraction,
+  APIApplicationCommandInteraction,
+  APIApplicationCommandInteractionWrapper,
   APIInteractionResponse,
   APIInteraction,
   InteractionType,
-  APIChatInputApplicationCommandInteractionData as ChatInputData,
-  APIContextMenuInteractionData as MenuInteractionData,
+  APIChatInputApplicationCommandInteractionData,
+  APIContextMenuInteractionData,
 } from "discord-api-types/payloads";
 
 export enum InteractionDataType {
@@ -21,8 +21,8 @@ export enum InteractionDataType {
 }
 
 type InteractionDataLookup = {
-  [InteractionDataType.ChatInput]: CommandInteractionWithData<ChatInputData>;
-  [InteractionDataType.ContextMenu]: CommandInteractionWithData<MenuInteractionData>;
+  [InteractionDataType.ChatInput]: APIApplicationCommandInteractionWrapper<APIChatInputApplicationCommandInteractionData>;
+  [InteractionDataType.ContextMenu]: APIApplicationCommandInteractionWrapper<APIContextMenuInteractionData>;
 };
 
 export type InteractionResponse = Promise<APIInteractionResponse> | APIInteractionResponse;
@@ -31,8 +31,8 @@ export type CommandInteractionHandlerWithData<DataType extends InteractionDataTy
   interaction: InteractionDataLookup[DataType],
   ...extra: any
 ) => InteractionResponse;
-export type CommandInteractionHandler = (interaction: CommandInteraction, ...extra: any) => InteractionResponse;
-export type ComponentInteractionHandler = (interaction: Partial<ComponentInteraction>, ...extra: any) => InteractionResponse;
+export type CommandInteractionHandler = (interaction: APIApplicationCommandInteraction, ...extra: any) => InteractionResponse;
+export type ComponentInteractionHandler = (interaction: Partial<APIMessageComponentInteraction>, ...extra: any) => InteractionResponse;
 
 const validateRequest = async (request: Request, publicKey: string) => {
   const signature = request.headers.get("x-signature-ed25519");
