@@ -13,14 +13,14 @@ const deleteExistingCommands = async (applicationId: string, botToken: string, g
 
   const commands = await fetch(url, {
     method: "GET",
-    headers: { "Content-Type": "application/json", Authorization: `Bot ${token}` },
+    headers: { "Content-Type": "application/json", Authorization: `Bot ${botToken}` },
   }).then((res) => res.json() as Promise<RESTGetAPIApplicationCommandsResult>);
 
   await Promise.all(
     commands.map((command) =>
       fetch(`${url}/${command.id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bot ${token}` },
+        headers: { Authorization: `Bot ${botToken}` },
       })
     )
   );
@@ -31,7 +31,7 @@ type createCommandsArgs = {
   guildId?: string;
   commands: Command<any>[];
 };
-const createCommands = async ({ applicationId, guildId, commands }: createCommandsArgs, token: string): Promise<Response> => {
+const createCommands = async ({ applicationId, guildId, commands }: createCommandsArgs, botToken: string): Promise<Response> => {
   const url = resolveCommandsEndpoint(applicationId, guildId);
 
   const promises = commands.map(async ([command, handler]) => {
@@ -39,7 +39,7 @@ const createCommands = async ({ applicationId, guildId, commands }: createComman
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify(command),
-        headers: { "Content-Type": "application/json", Authorization: `Bot ${token}` },
+        headers: { "Content-Type": "application/json", Authorization: `Bot ${botToken}` },
       });
 
       return { [command.name!]: await response.json() };
@@ -61,11 +61,11 @@ const createCommands = async ({ applicationId, guildId, commands }: createComman
     .catch((e) => new Response(e.message, { status: 502 }));
 };
 
-export const setup = ({ applicationId, applicationSecret, guildId, commands }: Application) => {
+export const setup = ({ applicationId, botToken, guildId, commands }: Application) => {
   return async (): Promise<Response> => {
     try {
-      await deleteExistingCommands(applicationId, applicationSecret, guildId);
-      return await createCommands({ applicationId, guildId, commands }, applicationSecret);
+      await deleteExistingCommands(applicationId, botToken, guildId);
+      return await createCommands({ applicationId, guildId, commands }, botToken);
     } catch {
       return new Response(JSON.stringify({ error: "Failed to authenticate with Discord. Are the Application ID and secret set correctly?" }), {
         status: 407,
