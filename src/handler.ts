@@ -32,7 +32,8 @@ export type DictCommands = Record<
   }
 >;
 
-export const createApplicationCommandHandler = (application: Application) => {
+export type ApplicationCommandHandler = (request: Request, ...extra: any) => Promise<any>;
+export const createApplicationCommandHandler = (application: Application): ApplicationCommandHandler => {
   router.get("/", authorize(application.applicationId, application.permissions));
   const commands = application.commands.reduce((_commands, command) => {
     _commands[command[0].name!] = { command: command[0], handler: command[1] };
