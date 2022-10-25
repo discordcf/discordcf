@@ -32,6 +32,8 @@ export type DictCommands = Record<
   }
 >;
 
+export const fromHexString = (hexString: string) => Uint8Array.from((hexString.match(/.{1,2}/g) || []).map((byte) => parseInt(byte, 16)));
+
 export type ApplicationCommandHandler = (request: Request, ...extra: any) => Promise<any>;
 export const createApplicationCommandHandler = (application: Application): ApplicationCommandHandler => {
   router.get("/", authorize(application.applicationId, application.permissions));
@@ -39,7 +41,10 @@ export const createApplicationCommandHandler = (application: Application): Appli
     _commands[command[0].name!] = { command: command[0], handler: command[1] };
     return _commands;
   }, <DictCommands>{});
-  router.post("/interaction", interaction({ publicKey: application.publicKey, commands, components: application.components }));
+
+  const publicKey = fromHexString(application.publicKey);
+
+  router.post("/interaction", interaction({ publicKey, commands, components: application.components }));
   router.get("/setup", setup(application));
   return router.handle;
 };

@@ -1,42 +1,41 @@
 {
-	"name": "cloudflare-discord-bot",
-	"version": "0.0.4",
-	"description": "A framework to build Discord Bots on top of Cloudflare Workers.",
-	"author": "alvgaona@gmail.com",
-	"license": "Apache License 2.0",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"files": [
-		"/dist"
-	],
-	"eslintConfig": {
-		"root": true,
-		"extends": [
-			"typescript",
-			"prettier"
-		]
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+ssh://git@github.com:alvgaona/cloudflare-discord-bot.git"
-	},
-	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^5.41.0",
-		"@typescript-eslint/parser": "^5.41.0",
-		"prettier": "^2.7.1",
-		"ts-loader": "^9.4.1",
-		"typescript": "^4.8.4"
-	},
-	"dependencies": {
-		"buffer": "^6.0.3",
-		"discord-api-types": "^0.37.14",
-		"itty-router": "^2.6.6",
-		"tweetnacl": "^1.0.3"
-	},
-	"scripts": {
-		"build": "tsc -p .",
-		"format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
-		"lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
-		"test": "echo \"No tests specified\""
-	}
+  "name": "cloudflare-discord-bot",
+  "version": "0.0.4",
+  "description": "A framework to build Discord Bots on top of Cloudflare Workers.",
+  "author": "alvgaona@gmail.com",
+  "license": "Apache License 2.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "typescript",
+      "prettier"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:alvgaona/cloudflare-discord-bot.git"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "prettier": "^2.7.1",
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "discord-api-types": "^0.37.14",
+    "itty-router": "^2.6.6",
+    "tweetnacl": "github:Inrixia/tweetnacl-js"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
+    "lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
+    "test": "echo \"No tests specified\""
+  }
 }

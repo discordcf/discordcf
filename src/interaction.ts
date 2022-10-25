@@ -1,7 +1,6 @@
-import nacl from "tweetnacl";
-import { Buffer } from "buffer";
+import { sign } from "tweetnacl";
 
-import type { DictCommands } from "./handler";
+import { DictCommands, fromHexString } from "./handler";
 import {
   APIMessageComponentInteraction,
   APIApplicationCommandInteraction,
@@ -34,13 +33,15 @@ export type CommandInteractionHandlerWithData<DataType extends InteractionDataTy
 export type CommandInteractionHandler = (interaction: APIApplicationCommandInteraction, ...extra: any) => InteractionResponse;
 export type ComponentInteractionHandler = (interaction: Partial<APIMessageComponentInteraction>, ...extra: any) => InteractionResponse;
 
-const validateRequest = async (request: Request, publicKey: string) => {
+const validateRequest = async (request: Request, publicKey: Uint8Array) => {
   const signature = request.headers.get("x-signature-ed25519");
   const timestamp = request.headers.get("x-signature-timestamp");
 
   if (signature === null || timestamp === null) return false;
 
-  return nacl.sign.detached.verify(Buffer.from(timestamp + (await request.text())), Buffer.from(signature, "hex"), Buffer.from(publicKey, "hex"));
+  const encoder = new TextEncoder();
+
+  return sign.detached.verify(encoder.encode(timestamp + (await request.text())), fromHexString(signature), publicKey);
 };
 
 const jsonResponse = (data: any) =>
@@ -49,7 +50,7 @@ const jsonResponse = (data: any) =>
   });
 
 type InteractionArgs = {
-  publicKey: string;
+  publicKey: Uint8Array;
   commands: DictCommands;
   components?: { [key: string]: ComponentInteractionHandler };
 };
