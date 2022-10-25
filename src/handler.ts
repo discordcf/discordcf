@@ -5,12 +5,12 @@ import { CommandInteractionHandlerWithData, interaction, InteractionDataType } f
 import { Permissions } from "./permissions";
 
 import type { CommandInteractionHandler, ComponentInteractionHandler } from "./interaction";
-import type { ApplicationCommand } from ".";
+import type { PartialAPIApplicationCommand } from "./types";
 
 const router = Router();
 
 export type Command<DataType extends InteractionDataType | void = void> = [
-  ApplicationCommand,
+  PartialAPIApplicationCommand,
   DataType extends InteractionDataType ? CommandInteractionHandlerWithData<DataType> : CommandInteractionHandler
 ];
 
@@ -27,7 +27,7 @@ export type Application = {
 export type DictCommands = Record<
   string,
   {
-    command: ApplicationCommand;
+    command: PartialAPIApplicationCommand;
     handler: CommandInteractionHandler;
   }
 >;

@@ -1,5 +1,4 @@
-import { Routes, RouteBases } from "discord-api-types/v10";
-import { RESTGetAPIApplicationCommandsResult } from "discord-api-types/v10";
+import { type RESTGetAPIApplicationCommandsResult, Routes, RouteBases } from "./types";
 
 import type { Application, Command } from "./handler";
 

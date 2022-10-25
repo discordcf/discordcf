@@ -1,16 +1,18 @@
 import { sign } from "tweetnacl";
 
 import { DictCommands, fromHexString } from "./handler";
-import {
+
+import type {
   APIMessageComponentInteraction,
   APIApplicationCommandInteraction,
   APIApplicationCommandInteractionWrapper,
   APIInteractionResponse,
   APIInteraction,
-  InteractionType,
   APIChatInputApplicationCommandInteractionData,
   APIContextMenuInteractionData,
-} from "discord-api-types/payloads";
+} from "./types";
+
+import { InteractionType } from "./types";
 
 export enum InteractionDataType {
   // APIChatInputApplicationCommandInteractionData

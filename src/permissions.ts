@@ -1,6 +1,4 @@
-import { PermissionFlagsBits } from "discord-api-types/payloads";
-
-export type PermissionFlags = keyof typeof PermissionFlagsBits;
+import { PermissionFlagsBits, type PermissionFlags } from "./types";
 export class Permissions {
   constructor(private types: PermissionFlags[]) {}
 
