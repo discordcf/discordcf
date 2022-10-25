@@ -16,7 +16,7 @@ export type Command<DataType extends InteractionDataType | void = void> = [
 
 export type Application = {
   applicationId: string;
-  applicationSecret: string;
+  botToken: string;
   publicKey: string;
   guildId?: string;
   commands: Command<any>[];

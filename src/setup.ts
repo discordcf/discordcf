@@ -8,19 +8,19 @@ const resolveCommandsEndpoint = (applicationId: string, guildId?: string): strin
   return RouteBases.api + Routes.applicationCommands(applicationId);
 };
 
-const deleteExistingCommands = async (applicationId: string, applicationSecret: string, guildId?: string): Promise<void> => {
+const deleteExistingCommands = async (applicationId: string, botToken: string, guildId?: string): Promise<void> => {
   const url = resolveCommandsEndpoint(applicationId, guildId);
 
   const commands = await fetch(url, {
     method: "GET",
-    headers: { "Content-Type": "application/json", Authorization: `Bot ${applicationSecret}` },
+    headers: { "Content-Type": "application/json", Authorization: `Bot ${token}` },
   }).then((res) => res.json() as Promise<RESTGetAPIApplicationCommandsResult>);
 
   await Promise.all(
     commands.map((command) =>
       fetch(`${url}/${command.id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bot ${applicationSecret}` },
+        headers: { Authorization: `Bot ${token}` },
       })
     )
   );
@@ -31,7 +31,7 @@ type createCommandsArgs = {
   guildId?: string;
   commands: Command<any>[];
 };
-const createCommands = async ({ applicationId, guildId, commands }: createCommandsArgs, applicationSecret: string): Promise<Response> => {
+const createCommands = async ({ applicationId, guildId, commands }: createCommandsArgs, token: string): Promise<Response> => {
   const url = resolveCommandsEndpoint(applicationId, guildId);
 
   const promises = commands.map(async ([command, handler]) => {
@@ -39,7 +39,7 @@ const createCommands = async ({ applicationId, guildId, commands }: createComman
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify(command),
-        headers: { "Content-Type": "application/json", Authorization: `Bot ${applicationSecret}` },
+        headers: { "Content-Type": "application/json", Authorization: `Bot ${token}` },
       });
 
       return { [command.name!]: await response.json() };
