@@ -21,16 +21,16 @@
 		"url": "git+ssh://git@github.com:alvgaona/cloudflare-discord-bot.git"
 	},
 	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^4.16.1",
-		"@typescript-eslint/parser": "^4.16.1",
-		"prettier": "^2.3.0",
-		"ts-loader": "^9.2.2",
-		"typescript": "^4.3.2"
+		"@typescript-eslint/eslint-plugin": "^5.41.0",
+		"@typescript-eslint/parser": "^5.41.0",
+		"prettier": "^2.7.1",
+		"ts-loader": "^9.4.1",
+		"typescript": "^4.8.4"
 	},
 	"dependencies": {
 		"buffer": "^6.0.3",
-		"discord-api-types": "^0.33.5",
-		"itty-router": "^2.6.1",
+		"discord-api-types": "^0.37.14",
+		"itty-router": "^2.6.6",
 		"tweetnacl": "^1.0.3"
 	},
 	"scripts": {
