@@ -85,7 +85,6 @@ export const interaction =
       if (handler! === undefined) return new Response(null, { status: 404 });
       return jsonResponse(await handler(interaction, ...extra));
     } catch (e: any) {
-      console.error(e);
       return new Response(null, { status: 500 });
     }
   };
