@@ -43,7 +43,7 @@ Generally, you will choose to do that when you are ready to go live.
 
 ## Simple Example
 
-See `examples/hello` for more.
+See [`example-bots/hug`](https://github.com/discordcf/example-bots/tree/master/hug) for more.
 
 ### `index.ts`
 
@@ -84,7 +84,7 @@ import { Command, InteractionDataType, InteractionResponseType } from "cloudflar
 
 export const hug: Command<InteractionDataType.ChatInput> = [
   {
-    name: "hello",
+    name: "hug",
     description: "Ask your bot for a friendly hug!",
   },
   async (interaction) => {
@@ -125,3 +125,11 @@ Licensed under the [Apache License 2.0].
 [@glenstack/cf-workers-discord-bot]: https://github.com/glenstack/glenstack/tree/master/packages/cf-workers-discord-bot
 [apache license 2.0]: ./LICENSE
 [mixurri]: https://github.com/alvgaona/mixurri.git
+
+<br>
+
+## Maintainers
+
+| [![alvgaona](https://github.com/alvgaona.png?size=100)](https://github.com/alvgaona) | [![Inrixia](https://github.com/Inrixia.png?size=100)](https://github.com/Inrixia) |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| [**alvgaona**](https://github.com/alvgaona)                                          | [**Inrixia**](https://github.com/Inrixia)                                         |
