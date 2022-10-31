@@ -1,4 +1,5 @@
 import { Permissions } from "./permissions";
+import { OAuth2Routes } from "./types";
 
 export const authorize = (applicationId: string, permissions: Permissions) => async (): Promise<Response> => {
   const urlSearchParams = new URLSearchParams({
@@ -7,7 +8,7 @@ export const authorize = (applicationId: string, permissions: Permissions) => as
     permissions: permissions.compute(),
   });
 
-  const redirectURL = new URL(`https://discord.com/oauth2/authorize`);
+  const redirectURL = new URL(OAuth2Routes.authorizationURL);
   redirectURL.search = urlSearchParams.toString();
 
   return new Response(null, {

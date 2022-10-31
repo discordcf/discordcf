@@ -20,100 +20,93 @@ So `cloudflare-discord-bot` comes to solve all of them, as you will see in the f
 npm install --save cloudflare-discord-bot
 ```
 
+You also need [**@cloudflare/wrangler2**](https://github.com/cloudflare/wrangler2) for publishing your worker etc. This does not cover wrangler commands.
+
 ## Usage :keyboard:
 
-You will notice there are 3 environment variables you need to set up.
-This is not required, but it's best not to hardcode values that might change at some point in time.
-Those are `CLIENT_ID`, `CLIENT_SECRET`, and `PUBLIC_KEY`.
-For that, in Cloudflare, you should set those up accordingly.
+- Firstly you need a discord Application & Bot! Head over to https://discord.com/developers/applications and create a new application. This is where your `applicationId` and `publicKey` are.
+- Go to **Bot** and create a new bot for your application. This is where your `botToken` is, to get it you need to click the **Reset Token** button.
+- Create a new cloudflare worker using `wrangler init` and add your bots `applicationId`, `publicKey`, and `botToken` to it as secrets `wrangler secret` (or any method you prefer, we suggest using secrets).
+- Write some cool code, or use some from our examples and publish your worker.
+- By now you should have a functioning worker, you need to take your workers url and set your applications `Interactions Endpoint Url` in the discord developer portal for example: `https://cfdiscord-example.yourcloudflareuser.workers.dev/interaction`. You can find your workers url on your cloudflare workers dashboard.
+- Aaaand your done! You should have a fully functional bot.
 
-Addtionally, you can choose to deploy your commands on a given guild or globally.
+<br/>
+
+You can choose to deploy your commands on a given guild or globally.
+
 The former will update your commands instantly on your server, which is great to develop your bot.
-On the other hand, the latter will update your commands after 1 hr. 
+On the other hand, the latter will update your commands after 1 hr.
+
 This is a Discord limitation.
 Generally, you will choose to do that when you are ready to go live.
 
-Lastly, you can set the bot permissions by setting each permission you need.
-Without worrying about the permission numbers Discord uses.
+## Simple Example
+
+See [`example-bots/hug`](https://github.com/discordcf/example-bots/tree/master/hug) for more.
 
 ### `index.ts`
 
-```typescript
-import { helloHandler, helloCommand } from './hello';
-import { 
-    createApplicationCommandHandler,
-    Permissions,
-    PermissionType 
-} from 'cloudflare-discord-bot';
+```ts
+import { createApplicationCommandHandler, Permissions, type ApplicationCommandHandler } from "cloudflare-discord-bot";
+import { hug } from "./hug";
 
-declare const CLIENT_ID: string;
-declare const CLIENT_SECRET: string;
-declare const PUBLIC_KEY: string;
+export type EnvInterface = {
+  // Secrets
+  applicationId: string;
+  botToken: string;
+  publicKey: string;
+};
 
-const applicationCommandHandler = createApplicationCommandHandler({
-  applicationId: CLIENT_ID,
-  applicationSecret: CLIENT_SECRET,
-  publicKey: PUBLIC_KEY,
-  commands: [
-    [helloCommand, helloHandler],
-  ],
-  guildId: "INSERT YOUR GUILD ID",  // Should only be used for development workers.
-  permissions: new Permissions(
-    [
-      PermissionType.ADD_REACTIONS,
-      PermissionType.ATTACH_FILES,
-      PermissionType.EMBED_LINKS,
-      PermissionType.SEND_MESSAGES,
-      PermissionType.USE_PUBLIC_THREADS,
-      PermissionType.SEND_TTS_MESSAGES,
-      PermissionType.MENTION_EVERYONE,
-      PermissionType.USE_EXTERNAL_EMOJIS,
-      PermissionType.USE_EXTERNAL_STICKERS,
-    ]
-  )
-});
-
-addEventListener('fetch', (event) => {
-  event.respondWith(applicationCommandHandler(event.request))
-})
+let handler: ApplicationCommandHandler;
+export default {
+  fetch: (req: Request, env: EnvInterface, context: ExecutionContext) => {
+    if (handler === undefined) {
+      handler = createApplicationCommandHandler({
+        applicationId: env.applicationId,
+        botToken: env.botToken,
+        publicKey: env.publicKey,
+        // Optional guildId for development
+        // guildId: "",
+        commands: [hug],
+        permissions: new Permissions([]),
+      });
+    }
+    return handler(req, env, context);
+  },
+};
 ```
 
-### `hello.ts`
+### `hug.ts`
 
-```typescript
-import { 
-  ApplicationCommand,
-  InteractionHandler,
-  Interaction,
-  InteractionResponse,
-  InteractionResponseType
-} from 'cloudflare-discord-bot'
+```ts
+import { Command, InteractionDataType, InteractionResponseType } from "cloudflare-discord-bot";
 
-export const helloCommand: ApplicationCommand = {
-  name: "hello",
-  description: "Your bot will greet you!",
-};
+export const hug: Command<InteractionDataType.ChatInput> = [
+  {
+    name: "hug",
+    description: "Ask your bot for a friendly hug!",
+  },
+  async (interaction) => {
+    const userId = interaction?.member?.user.id;
+    if (userId === undefined) throw new Error(`User is undefined`);
 
-export const helloHandler: InteractionHandler = async (
-  interaction: Interaction
-): Promise<InteractionResponse> => {
-  const userID = interaction.member.user.id;
-
-  return {
-    type: InteractionResponseType.ChannelMessageWithSource,
-    data: {
-      content: `Hello, <@${userID}>!`,
-      allowed_mentions: {
-        users: [userID],
+    return {
+      type: InteractionResponseType.ChannelMessageWithSource,
+      data: {
+        content: `Hello, <@${userId}>! *hugs*`,
+        allowed_mentions: {
+          users: [userId],
+        },
       },
-    },
-  };
-};
+    };
+  },
+];
 ```
 
 ## Example of bots
 
-- [Mixurri: A chatbot to organize 5v5 matches.][Mixurri]
+- [Mixurri: A chatbot to organize 5v5 matches.][mixurri]
 
 ## Contributing :handshake:
 
@@ -130,6 +123,13 @@ There are many ways of contributing to it:
 Licensed under the [Apache License 2.0].
 
 [@glenstack/cf-workers-discord-bot]: https://github.com/glenstack/glenstack/tree/master/packages/cf-workers-discord-bot
-[Apache License 2.0]: ./LICENSE
-[Mixurri]: https://github.com/alvgaona/mixurri.git
+[apache license 2.0]: ./LICENSE
+[mixurri]: https://github.com/alvgaona/mixurri.git
 
+<br>
+
+## Maintainers
+
+| [![alvgaona](https://github.com/alvgaona.png?size=100)](https://github.com/alvgaona) | [![Inrixia](https://github.com/Inrixia.png?size=100)](https://github.com/Inrixia) |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| [**alvgaona**](https://github.com/alvgaona)                                          | [**Inrixia**](https://github.com/Inrixia)                                         |
