@@ -35,6 +35,7 @@ export type DictCommands = Record<
 export const fromHexString = (hexString: string) => Uint8Array.from((hexString.match(/.{1,2}/g) || []).map((byte) => parseInt(byte, 16)));
 
 export type ApplicationCommandHandler = (request: Request, ...extra: any) => Promise<any>;
+
 export const createApplicationCommandHandler = (application: Application): ApplicationCommandHandler => {
   router.get("/", authorize(application.applicationId, application.permissions));
   const commands = application.commands.reduce((_commands, command) => {
