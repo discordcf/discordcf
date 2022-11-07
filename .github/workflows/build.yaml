@@ -6,7 +6,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Build discordcf
         id: build
-        run: ./.github/scripts/build.sh
+        run: .github/scripts/build.sh
         shell: bash
