@@ -8,6 +8,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      
+      - name: NPM Install
+        run: npm install
 
       - name: Build discordcf
         id: build
