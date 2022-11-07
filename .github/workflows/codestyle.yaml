@@ -1,0 +1,15 @@
+name: Code Style
+
+on: [push, pull_request]
+
+jobs:
+  codestyle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Run lint and formatter script
+        id: lint-formatter
+        run: .github/scripts/codestyle.sh
+        shell: bash
