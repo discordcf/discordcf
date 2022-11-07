@@ -11,7 +11,8 @@ module.exports = {
     project: 'tsconfig.json',
   },
   rules: {
-    '@typescript-eslint/comma-dangle': ['error', 'only-multiline'],
-    '@typescript-eslint/space-before-function-paren': ['error', 'never'],
+    '@typescript-eslint/indent': 'off',
+    '@typescript-eslint/space-before-function-paren': 'off',
+    '@typescript-eslint/comma-dangle': 'off',
   },
 }
