@@ -1,4 +1,5 @@
 import { PermissionFlagsBits, type PermissionFlags } from './types'
+
 export class Permissions {
   constructor(private readonly types: PermissionFlags[]) {}
 

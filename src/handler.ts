@@ -11,7 +11,7 @@ const router = Router()
 
 export type Command<DataType extends InteractionDataType> = [
   PartialAPIApplicationCommand,
-  DataType extends InteractionDataType ? CommandInteractionHandlerWithData<DataType> : CommandInteractionHandler
+  DataType extends InteractionDataType ? CommandInteractionHandlerWithData<DataType> : CommandInteractionHandler,
 ]
 
 export interface Application {
@@ -25,14 +25,15 @@ export interface Application {
 }
 
 export type DictCommands = Record<
-string,
-{
-  command: PartialAPIApplicationCommand
-  handler: CommandInteractionHandler
-}
+  string,
+  {
+    command: PartialAPIApplicationCommand
+    handler: CommandInteractionHandler
+  }
 >
 
-export const fromHexString = (hexString: string): Uint8Array => Uint8Array.from((hexString.match(/.{1,2}/g) ?? []).map((byte) => parseInt(byte, 16)))
+export const fromHexString = (hexString: string): Uint8Array =>
+  Uint8Array.from((hexString.match(/.{1,2}/g) ?? []).map((byte) => parseInt(byte, 16)))
 
 export type ApplicationCommandHandler = (request: Request, ...extra: any) => Promise<any>
 
