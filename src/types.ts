@@ -1,8 +1,10 @@
-export * from "discord-api-types/v10";
-export * from "discord-api-types/payloads";
+import type { APIApplicationCommand } from 'discord-api-types/payloads'
+import type { PermissionFlagsBits } from 'discord-api-types/v10'
 
-import type { PermissionFlagsBits } from "discord-api-types/v10";
-export type PermissionFlags = keyof typeof PermissionFlagsBits;
+export * from 'discord-api-types/v10'
+export * from 'discord-api-types/payloads'
+export type PermissionFlags = keyof typeof PermissionFlagsBits
 
-import type { APIApplicationCommand } from "discord-api-types/payloads";
-export type PartialAPIApplicationCommand = Partial<APIApplicationCommand>;
+type PartialWithRequired<T, K extends keyof T> = Pick<T, K> & Partial<T>
+
+export type PartialAPIApplicationCommand = PartialWithRequired<APIApplicationCommand, 'name'>
