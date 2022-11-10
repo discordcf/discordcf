@@ -1,5 +1,4 @@
 import { type RESTGetAPIApplicationCommandsResult, Routes, RouteBases } from "./types";
-
 import type { Application, Command } from "./handler";
 
 const resolveCommandsEndpoint = (applicationId: string, guildId?: string): string => {
