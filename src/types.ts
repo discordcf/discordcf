@@ -7,4 +7,4 @@ export type PermissionFlags = keyof typeof PermissionFlagsBits
 
 type PartialWithRequired<T, K extends keyof T> = Pick<T, K> & Partial<T>
 
-export type PartialAPIApplicationCommand = PartialWithRequired<APIApplicationCommand, 'name'>
+export type PartialWithRequiredAPIApplicationCommand = PartialWithRequired<APIApplicationCommand, 'name'>

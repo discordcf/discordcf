@@ -37,7 +37,7 @@ const createCommands = async (
 ): Promise<Response> => {
   const url = resolveCommandsEndpoint(applicationId, guildId)
 
-  const promises = commands.map(async ([command, handler]) => {
+  const promises = commands.map(async ([command, _]) => {
     try {
       const response = await fetch(url, {
         method: 'POST',

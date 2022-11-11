@@ -5,12 +5,12 @@ import { CommandInteractionHandlerWithData, interaction, InteractionDataType } f
 import { Permissions } from './permissions'
 
 import type { CommandInteractionHandler, ComponentInteractionHandler } from './interaction'
-import type { PartialAPIApplicationCommand } from './types'
+import type { PartialWithRequiredAPIApplicationCommand } from './types'
 
 const router = Router()
 
 export type Command<DataType extends InteractionDataType = InteractionDataType.ChatInput> = [
-  PartialAPIApplicationCommand,
+  PartialWithRequiredAPIApplicationCommand,
   DataType extends InteractionDataType ? CommandInteractionHandlerWithData<DataType> : CommandInteractionHandler,
 ]
 
@@ -27,7 +27,7 @@ export interface Application {
 export type DictCommands = Record<
   string,
   {
-    command: PartialAPIApplicationCommand
+    command: PartialWithRequiredAPIApplicationCommand
     handler: CommandInteractionHandler
   }
 >
