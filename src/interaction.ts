@@ -73,7 +73,7 @@ const jsonResponse = (data: any): Response => {
   return new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } })
 }
 
-type InteractionArgs = {
+interface InteractionArgs {
   publicKey: Uint8Array
   commands: DictCommands
   components?: { [key: string]: ComponentInteractionHandler }

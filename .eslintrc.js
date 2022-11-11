@@ -14,5 +14,7 @@ module.exports = {
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/space-before-function-paren': 'off',
     '@typescript-eslint/comma-dangle': 'off',
+    '@typescript-eslint/no-useless-constructor': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
   },
 }
