@@ -1,7 +1,5 @@
 import { sign } from 'tweetnacl'
-
 import { DictCommands, fromHexString } from './handler'
-
 import type {
   APIMessageComponentInteraction,
   APIApplicationCommandInteraction,
@@ -32,42 +30,60 @@ export type CommandInteractionHandlerWithData<DataType extends InteractionDataTy
   interaction: InteractionDataLookup[DataType],
   ...extra: any
 ) => InteractionResponse
+
 export type CommandInteractionHandler = (
   interaction: APIApplicationCommandInteraction,
   ...extra: any
 ) => InteractionResponse
+
 export type ComponentInteractionHandler = (
   interaction: Partial<APIMessageComponentInteraction>,
   ...extra: any
 ) => InteractionResponse
 
-const validateRequest = async (request: Request, publicKey: Uint8Array): Promise<boolean> => {
+class InvalidRequestError extends Error {
+  constructor(message: string) {
+    super(message)
+  }
+}
+
+const validateRequest = async (request: Request, publicKey: Uint8Array): Promise<void> => {
   const signature = request.headers.get('x-signature-ed25519')
   const timestamp = request.headers.get('x-signature-timestamp')
 
-  if (signature === null || timestamp === null) return false
+  if (signature === null || timestamp === null) {
+    console.error(`Signature and/or timestamp are invalid: ${signature}, ${timestamp}`)
+    throw new InvalidRequestError(`Request signature is ${signature} and timestamp is ${timestamp}`)
+  }
 
   const encoder = new TextEncoder()
 
-  return sign.detached.verify(encoder.encode(timestamp + (await request.text())), fromHexString(signature), publicKey)
+  const isValid = sign.detached.verify(
+    encoder.encode(timestamp + (await request.text())),
+    fromHexString(signature),
+    publicKey,
+  )
+
+  if (!isValid) {
+    throw new InvalidRequestError("Request didn't comply with the correct signature.")
+  }
 }
 
-const jsonResponse = (data: any): Response =>
-  new Response(JSON.stringify(data), {
-    headers: { 'Content-Type': 'application/json' },
-  })
+const jsonResponse = (data: any): Response => {
+  return new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } })
+}
 
-interface InteractionArgs {
+type InteractionArgs = {
   publicKey: Uint8Array
   commands: DictCommands
   components?: { [key: string]: ComponentInteractionHandler }
 }
+
 export const interaction =
   ({ publicKey, commands, components = {} }: InteractionArgs) =>
   async (request: Request, ...extra: any): Promise<Response> => {
     try {
-      const requestValid = await validateRequest(request.clone(), publicKey)
-      if (!requestValid) return new Response(null, { status: 401 })
+      await validateRequest(request.clone(), publicKey)
 
       const interaction: APIInteraction = await request.json()
 
@@ -94,6 +110,10 @@ export const interaction =
         }
       }
     } catch (e: any) {
-      return new Response(null, { status: 500 })
+      console.error(e)
+      if (e instanceof InvalidRequestError) {
+        return new Response(e.message, { status: 401 })
+      }
+      return new Response('Internal server error!', { status: 500 })
     }
   }
