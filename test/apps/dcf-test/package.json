@@ -1,8 +1,8 @@
 {
-  "name": "hello-bot",
+  "name": "dcf-test",
   "version": "0.0.1",
   "private": true,
-  "description": "A simple bot that can greet you on your server.",
+  "description": "The test bot used by discordcf to run manual and smoke tests.",
   "scripts": {
     "build": "webpack",
     "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
