@@ -9,7 +9,7 @@ import type { PartialAPIApplicationCommand } from './types'
 
 const router = Router()
 
-export type Command<DataType extends InteractionDataType> = [
+export type Command<DataType extends InteractionDataType = InteractionDataType.ChatInput> = [
   PartialAPIApplicationCommand,
   DataType extends InteractionDataType ? CommandInteractionHandlerWithData<DataType> : CommandInteractionHandler,
 ]
