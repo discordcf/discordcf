@@ -19,7 +19,7 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           environment: test
           workingDirectory: test/apps/dcf-test
-          preCommands: npm install && npm run build
+          preCommands: npm install --prefix test/apps/dcf-test && npm run --prefix test/apps/dcf-test build
           secrets: |
             BOT_TOKEN
             GUILD_ID
