@@ -1,0 +1,17 @@
+name: Code Style
+
+on: [push, pull_request]
+
+jobs:
+  codestyle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: NPM Install
+        run: npm install
+      
+      - name: Run lint and formatter script
+        id: lint-formatter
+        run: npm run lint

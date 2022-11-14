@@ -12,4 +12,3 @@ workers_dev = true
 [env.test.vars]
 APPLICATION_ID = "1038474654467239996"
 PUBLIC_KEY = "dc5892a83d29cbd7adf5d6ae93bdaf5f62a4d2b5920d95be7b5ec7b5aa1b77fd"
-GUILD_ID = "1007829093556953169"
