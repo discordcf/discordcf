@@ -9,6 +9,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       
+      - name: NPM Install
+        run: npm install
+      
       - name: Run lint and formatter script
         id: lint-formatter
         run: npm run lint
