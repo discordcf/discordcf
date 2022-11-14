@@ -1,0 +1,27 @@
+name: Deploy environments
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Test deployment
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          environment: test
+          workingDirectory: test/apps/dcf-test
+          secrets: |
+            BOT_TOKEN
+            GUILD_ID
+        env:
+          BOT_TOKEN: ${{ secrets.TEST_APP_BOT_TOKEN }}
+          GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
