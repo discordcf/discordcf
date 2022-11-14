@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "outDir": "./dist",
     "module": "commonjs",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "target": "esnext",
+    "lib": ["esnext", "webworker"],
     "alwaysStrict": true,
     "strict": true,
     "preserveConstEnums": true,
     "moduleResolution": "node",
+    "sourceMap": true,
     "esModuleInterop": true,
-    "rootDir": "src",
-    "outDir": "dist"
+    "types": ["@cloudflare/workers-types", "@types/node"]
   },
   "include": ["src"],
-  "exclude": ["node_modules/**", "dist/"]
+  "exclude": ["node_modules", "dist", "test"]
 }
