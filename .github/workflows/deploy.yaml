@@ -21,5 +21,7 @@ jobs:
           workingDirectory: test/apps/dcf-test
         secrets: |
           BOT_TOKEN
+          GUILD_ID
         env:
           BOT_TOKEN: ${{ secrets.TEST_APP_BOT_TOKEN }}
+          GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
