@@ -11,5 +11,4 @@ jobs:
       
       - name: Run lint and formatter script
         id: lint-formatter
-        run: .github/scripts/codestyle.sh
-        shell: bash
+        run: npm run lint
