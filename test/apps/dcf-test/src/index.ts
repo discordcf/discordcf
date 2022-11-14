@@ -1,14 +1,14 @@
-import helloCommand from './cmd/hello'
-import { createApplicationCommandHandler, Permissions } from '@discordcf/framework'
+import helloCommand from './cmd/hello';
+import { createApplicationCommandHandler, Permissions } from '@discordcf/framework';
 
-let applicationCommandHandler: (request: Request) => any
+let applicationCommandHandler: (request: Request) => any;
 
 export interface Env {
-  APPLICATION_ID: string
-  CLIENT_SECRET: string
-  PUBLIC_KEY: string
-  BOT_TOKEN: string
-  GUILD_ID?: string
+  APPLICATION_ID: string;
+  CLIENT_SECRET: string;
+  PUBLIC_KEY: string;
+  BOT_TOKEN: string;
+  GUILD_ID?: string;
 }
 
 export default {
@@ -31,8 +31,8 @@ export default {
           'UseExternalEmojis',
           'UseExternalStickers',
         ]),
-      })
+      });
     }
-    return applicationCommandHandler(request)
+    return applicationCommandHandler(request);
   },
-}
+};

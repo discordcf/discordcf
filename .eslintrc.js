@@ -17,4 +17,4 @@ module.exports = {
     '@typescript-eslint/no-useless-constructor': 'off',
     '@typescript-eslint/restrict-template-expressions': 'off',
   },
-}
+};

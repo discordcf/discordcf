@@ -1,5 +1,5 @@
-import { Command, InteractionDataType, APIInteractionResponse, InteractionResponseType } from '@discordcf/framework'
-import { Env } from '..'
+import { Command, InteractionDataType, APIInteractionResponse, InteractionResponseType } from '@discordcf/framework';
+import { Env } from '..';
 
 export const helloCommand: Command<InteractionDataType.ChatInput> = [
   {
@@ -7,7 +7,7 @@ export const helloCommand: Command<InteractionDataType.ChatInput> = [
     description: 'A simple hello message',
   },
   async (interaction: any, env: Env, context: any): Promise<APIInteractionResponse> => {
-    const userId = interaction.member?.user.id
+    const userId = interaction.member?.user.id;
 
     return {
       type: InteractionResponseType.ChannelMessageWithSource,
@@ -17,8 +17,8 @@ export const helloCommand: Command<InteractionDataType.ChatInput> = [
           users: [userId || ''],
         },
       },
-    }
+    };
   },
-]
+];
 
-export default helloCommand
+export default helloCommand;
