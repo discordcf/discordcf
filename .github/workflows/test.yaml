@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      
+      - name: Build discordcf
+        run: npm install && npm run build
 
       - name: Test deployment
         uses: cloudflare/wrangler-action@2.0.0
