@@ -16,5 +16,7 @@ module.exports = {
     '@typescript-eslint/comma-dangle': 'off',
     '@typescript-eslint/no-useless-constructor': 'off',
     '@typescript-eslint/restrict-template-expressions': 'off',
+    '@typescript-eslint/semi': 'off',
+    '@typescript-eslint/member-delimiter-style': 'off',
   },
 };
