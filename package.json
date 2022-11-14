@@ -21,11 +21,19 @@
     "url": "git+ssh://git@github.com:alvgaona/cloudflare-discord-bot.git"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@commitlint/cli": "^17.2.0",
+    "@commitlint/config-conventional": "^17.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.41.0",
+    "eslint": "^8.27.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.0",
+    "eslint-plugin-promise": "^6.1.1",
     "prettier": "^2.7.1",
     "ts-loader": "^9.4.1",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "husky": "^8.0.0"
   },
   "dependencies": {
     "discord-api-types": "^0.37.14",
@@ -36,6 +44,7 @@
     "build": "tsc -p .",
     "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
-    "test": "echo \"No tests specified\""
+    "test": "echo \"No tests specified\"",
+    "prepare": "husky install"
   }
 }

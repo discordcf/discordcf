@@ -1,7 +1,6 @@
 compatibility_date = "2022-10-20"
 account_id = "590d5e6a4382a813b506fa45ca1609e0"
 main = "src/index.ts"
-node_compat = true
 
 [build]
 command = "npm install && npm run build"

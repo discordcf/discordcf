@@ -1,7 +1,7 @@
-import { PermissionFlagsBits, type PermissionFlags } from "./types"
+import { PermissionFlagsBits, type PermissionFlags } from './types';
 
 export class Permissions {
-  constructor(private types: PermissionFlags[]) {}
+  constructor(private readonly types: PermissionFlags[]) {}
 
   compute(): string {
     let permission = 0n;
