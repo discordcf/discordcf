@@ -2,9 +2,8 @@ compatibility_date = "2022-10-20"
 account_id = "590d5e6a4382a813b506fa45ca1609e0"
 main = "src/index.ts"
 
-# Uncomment to run locally
-# [build]
-# command = "npm install && npm run build"
+[build]
+command = "npm install && npm run build"
 
 [env.test]
 name = "noisy-meadow-372a"
