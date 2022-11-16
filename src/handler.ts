@@ -1,26 +1,23 @@
 import { Router } from 'itty-router';
 import { setup } from './setup';
 import { authorize } from './authorize';
-import { CommandInteractionHandlerWithData, interaction, InteractionDataType } from './interaction';
+import { interaction } from './interaction';
 import { Permissions } from './permissions';
 
-import type { CommandInteractionHandler, ComponentInteractionHandler } from './interaction';
+import type { InteractionHandler } from './interaction';
 import type { PartialWithRequiredAPIApplicationCommand } from './types';
 
 const router = Router();
 
-export type Command<DataType extends InteractionDataType = InteractionDataType.ChatInput> = [
-  PartialWithRequiredAPIApplicationCommand,
-  DataType extends InteractionDataType ? CommandInteractionHandlerWithData<DataType> : CommandInteractionHandler,
-];
+export type Command = [PartialWithRequiredAPIApplicationCommand, InteractionHandler];
 
 export interface Application {
   applicationId: string;
   botToken: string;
   publicKey: string;
   guildId?: string;
-  commands: Array<Command<any>>;
-  components?: Record<string, ComponentInteractionHandler>;
+  commands: Command[];
+  components?: Record<string, InteractionHandler>;
   permissions: Permissions;
 }
 
@@ -28,7 +25,7 @@ export type DictCommands = Record<
   string,
   {
     command: PartialWithRequiredAPIApplicationCommand;
-    handler: CommandInteractionHandler;
+    handler: InteractionHandler;
   }
 >;
 
@@ -37,7 +34,11 @@ export const fromHexString = (hexString: string): Uint8Array =>
 
 export type ApplicationCommandHandler = (request: Request, ...extra: any) => Promise<any>;
 
-export const createApplicationCommandHandler = (application: Application): ApplicationCommandHandler => {
+export const createApplicationCommandHandler = (
+  application: Application,
+  env: any,
+  context: any,
+): ApplicationCommandHandler => {
   router.get('/', authorize(application.applicationId, application.permissions));
 
   const commands = application.commands.reduce<DictCommands>((_commands, command) => {
@@ -47,7 +48,14 @@ export const createApplicationCommandHandler = (application: Application): Appli
 
   const publicKey = fromHexString(application.publicKey);
 
-  router.post('/interaction', interaction({ publicKey, commands, components: application.components }));
+  router.post(
+    '/interaction',
+    interaction(
+      { applicationId: application.applicationId, publicKey, commands, components: application.components },
+      env,
+      context,
+    ),
+  );
   router.get('/setup', setup(application));
   return router.handle;
 };

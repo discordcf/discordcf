@@ -28,7 +28,7 @@ const deleteExistingCommands = async (applicationId: string, botToken: string, g
 interface CreateCommandsArgs {
   applicationId: string;
   guildId?: string;
-  commands: Array<Command<any>>;
+  commands: Command[];
 }
 
 const createCommands = async (

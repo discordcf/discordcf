@@ -1,5 +1,6 @@
 import helloCommand from './cmd/hello';
 import { createApplicationCommandHandler, Permissions } from '@discordcf/framework';
+import deferredCommand from './cmd/deferred';
 
 let applicationCommandHandler: (request: Request) => any;
 
@@ -14,24 +15,28 @@ export interface Env {
 export default {
   fetch: async (request: Request, env: Env, context: any): Promise<Response> => {
     if (!applicationCommandHandler) {
-      applicationCommandHandler = createApplicationCommandHandler({
-        applicationId: env.APPLICATION_ID,
-        publicKey: env.PUBLIC_KEY,
-        botToken: env.BOT_TOKEN,
-        commands: [helloCommand],
-        components: {},
-        guildId: env.GUILD_ID,
-        permissions: new Permissions([
-          'AddReactions',
-          'AttachFiles',
-          'EmbedLinks',
-          'SendMessages',
-          'SendTTSMessages',
-          'MentionEveryone',
-          'UseExternalEmojis',
-          'UseExternalStickers',
-        ]),
-      });
+      applicationCommandHandler = createApplicationCommandHandler(
+        {
+          applicationId: env.APPLICATION_ID,
+          publicKey: env.PUBLIC_KEY,
+          botToken: env.BOT_TOKEN,
+          commands: [helloCommand, deferredCommand],
+          components: {},
+          guildId: env.GUILD_ID,
+          permissions: new Permissions([
+            'AddReactions',
+            'AttachFiles',
+            'EmbedLinks',
+            'SendMessages',
+            'SendTTSMessages',
+            'MentionEveryone',
+            'UseExternalEmojis',
+            'UseExternalStickers',
+          ]),
+        },
+        env,
+        context,
+      );
     }
     return applicationCommandHandler(request);
   },
