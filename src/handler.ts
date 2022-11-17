@@ -5,11 +5,20 @@ import { interaction } from './interaction';
 import { Permissions } from './permissions';
 
 import type { InteractionHandler } from './interaction';
-import type { PartialWithRequiredAPIApplicationCommand } from './types';
+import type { APIMessageComponent, PartialWithRequiredAPIApplicationCommand } from './types';
 
 const router = Router();
 
-export type Command = [PartialWithRequiredAPIApplicationCommand, InteractionHandler];
+export interface Command {
+  command: PartialWithRequiredAPIApplicationCommand;
+  handler: InteractionHandler;
+}
+
+export interface MessageComponent {
+  customId: string;
+  component: APIMessageComponent;
+  handler: InteractionHandler;
+}
 
 export interface Application {
   applicationId: string;
@@ -17,17 +26,13 @@ export interface Application {
   publicKey: string;
   guildId?: string;
   commands: Command[];
-  components?: Record<string, InteractionHandler>;
+  components?: MessageComponent[];
   permissions: Permissions;
 }
 
-export type DictCommands = Record<
-  string,
-  {
-    command: PartialWithRequiredAPIApplicationCommand;
-    handler: InteractionHandler;
-  }
->;
+export type DictComponents = Record<string, MessageComponent>;
+
+export type DictCommands = Record<string, Command>;
 
 export const fromHexString = (hexString: string): Uint8Array =>
   Uint8Array.from((hexString.match(/.{1,2}/g) ?? []).map((byte) => parseInt(byte, 16)));
@@ -37,24 +42,25 @@ export type ApplicationCommandHandler = (request: Request, ...extra: any) => Pro
 export const createApplicationCommandHandler = (
   application: Application,
   env: any,
-  context: any,
+  context: ExecutionContext,
 ): ApplicationCommandHandler => {
   router.get('/', authorize(application.applicationId, application.permissions));
 
-  const commands = application.commands.reduce<DictCommands>((_commands, command) => {
-    _commands[command[0].name] = { command: command[0], handler: command[1] };
-    return _commands;
+  const commands = application.commands.reduce<DictCommands>((result, c) => {
+    result[c.command.name] = { command: c.command, handler: c.handler };
+    return result;
+  }, {});
+
+  const components = application.components?.reduce<DictComponents>((result, c) => {
+    result[c.customId] = { customId: c.customId, component: c.component, handler: c.handler };
+    return result;
   }, {});
 
   const publicKey = fromHexString(application.publicKey);
 
   router.post(
     '/interaction',
-    interaction(
-      { applicationId: application.applicationId, publicKey, commands, components: application.components },
-      env,
-      context,
-    ),
+    interaction({ applicationId: application.applicationId, publicKey, commands, components }, env, context),
   );
   router.get('/setup', setup(application));
   return router.handle;

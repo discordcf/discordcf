@@ -1,21 +1,15 @@
 import { Command, InteractionResponseType, MessageFlags, Context, APIInteractionResponse } from '@discordcf/framework';
 
-export const deferredCommand: Command = [
-  {
+export const deferredCommand: Command = {
+  command: {
     name: 'deferred',
     description: 'A deferred message',
   },
-  async (ctx: Context): Promise<APIInteractionResponse> => {
-    // await ctx.defer(async () => {
-    //   await ctx.followup.reply({
-    //     content: "The message has been deferred"
-    //   })
-    // })
-    ctx.context.waitUntil(
-      new Promise(() => {
-        return { content: 'HAHA' };
-      }),
-    );
+  handler: async (ctx: Context): Promise<APIInteractionResponse> => {
+    ctx.defer(async (ctx: Context): Promise<void> => {
+      await ctx.followup.reply({ content: 'Message was deferred' });
+      await ctx.followup.reply({ content: 'This is a follow up message' });
+    });
 
     return {
       type: InteractionResponseType.DeferredChannelMessageWithSource,
@@ -24,6 +18,6 @@ export const deferredCommand: Command = [
       },
     };
   },
-];
+};
 
 export default deferredCommand;

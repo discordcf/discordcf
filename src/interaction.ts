@@ -1,24 +1,27 @@
 import { sign } from 'tweetnacl';
 import { Context } from './context';
-import { DictCommands, fromHexString } from './handler';
+import { DictCommands, DictComponents, fromHexString } from './handler';
+import {
+  createInteractionResponse,
+  deleteOriginalInteractionResponse,
+  editOriginalInteractionResponse,
+  getOriginalInteractionResponse,
+} from './api/interactions';
 import {
   APIInteractionResponse,
   APIInteraction,
-  APIContextMenuInteractionData,
-  APIApplicationCommandInteractionData,
-  APIUserApplicationCommandInteractionData,
-  APIMessageApplicationCommandInteractionData,
-  APIMessageComponentInteractionData,
-  APIMessageButtonInteractionData,
-  APIMessageRoleSelectInteractionData,
-  APIMessageUserSelectInteractionData,
-  APIModalSubmission,
   InteractionType,
+  APIApplicationCommandInteraction,
+  APIMessageComponentInteraction,
+  RESTPatchAPIInteractionOriginalResponseJSONBody,
 } from './types';
 
 export type InteractionResponse = Promise<APIInteractionResponse> | APIInteractionResponse;
 
-export type InteractionHandler = (ctx: Context, ...extra: any) => Promise<APIInteractionResponse>;
+export type InteractionHandler = (
+  ctx: Context,
+  ...extra: any
+) => Promise<APIInteractionResponse | APIMessageComponentInteraction>;
 
 class InvalidRequestError extends Error {
   constructor(message: string) {
@@ -56,21 +59,8 @@ interface InteractionArgs {
   applicationId: string;
   publicKey: Uint8Array;
   commands: DictCommands;
-  components?: { [key: string]: InteractionHandler };
+  components?: DictComponents;
 }
-
-type APIApplicationInteractionData =
-  | APIApplicationCommandInteractionData
-  | APIUserApplicationCommandInteractionData
-  | APIApplicationCommandInteractionData
-  | APIMessageApplicationCommandInteractionData
-  | APIContextMenuInteractionData
-  | APIMessageButtonInteractionData
-  | APIMessageComponentInteractionData
-  | APIMessageRoleSelectInteractionData
-  | APIMessageUserSelectInteractionData
-  | APIModalSubmission
-  | undefined;
 
 export class Interaction {
   constructor(private readonly _interaction: APIInteraction, private readonly applicationId: string) {}
@@ -79,17 +69,29 @@ export class Interaction {
     return this._interaction.type;
   }
 
-  get data(): APIApplicationInteractionData {
-    return this._interaction.data;
+  get structure(): APIInteraction {
+    return this._interaction;
   }
 
-  get interaction(): APIInteraction {
-    return this._interaction;
+  async reply(message: APIInteractionResponse): Promise<Response> {
+    return await createInteractionResponse(this._interaction, message);
+  }
+
+  async get(): Promise<Response> {
+    return await getOriginalInteractionResponse(this._interaction);
+  }
+
+  async edit(message: RESTPatchAPIInteractionOriginalResponseJSONBody): Promise<Response> {
+    return await editOriginalInteractionResponse(this._interaction, message);
+  }
+
+  async delete(): Promise<Response> {
+    return await deleteOriginalInteractionResponse(this._interaction);
   }
 }
 
 export const interaction =
-  ({ applicationId, publicKey, commands, components = {} }: InteractionArgs, env?: any, context?: any) =>
+  ({ applicationId, publicKey, commands, components = {} }: InteractionArgs, env: any, context: ExecutionContext) =>
   async (request: Request, ...extra: any): Promise<Response> => {
     try {
       await validateRequest(request.clone(), publicKey);
@@ -101,17 +103,19 @@ export const interaction =
           return jsonResponse({ type: 1 });
         }
         case InteractionType.ApplicationCommand: {
-          if (ctx.interaction.data?.name === undefined) {
+          const structure = ctx.interaction.structure as APIApplicationCommandInteraction;
+          if (structure.data?.name === undefined) {
             throw Error('Interaction name is undefined');
           }
-          const handler = commands[ctx.interaction.data?.name].handler;
+          const handler = commands[structure.data?.name].handler;
           return jsonResponse(await handler(ctx, ...extra));
         }
         case InteractionType.MessageComponent: {
-          if (ctx.interaction.data === undefined) {
+          const structure = ctx.interaction.structure as APIMessageComponentInteraction;
+          if (structure.data === undefined) {
             throw Error('Interaction custom_id is undefined');
           }
-          const handler = components[ctx.interaction.data?.custom_id];
+          const handler = components[structure.data?.custom_id].handler;
           return jsonResponse(await handler(ctx, ...extra));
         }
         default: {

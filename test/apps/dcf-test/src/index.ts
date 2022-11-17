@@ -2,7 +2,7 @@ import helloCommand from './cmd/hello';
 import { createApplicationCommandHandler, Permissions } from '@discordcf/framework';
 import deferredCommand from './cmd/deferred';
 
-let applicationCommandHandler: (request: Request) => any;
+let applicationCommandHandler: (request: Request) => Promise<any>;
 
 export interface Env {
   APPLICATION_ID: string;
@@ -13,7 +13,7 @@ export interface Env {
 }
 
 export default {
-  fetch: async (request: Request, env: Env, context: any): Promise<Response> => {
+  fetch: async (request: Request, env: Env, context: ExecutionContext): Promise<Response> => {
     if (!applicationCommandHandler) {
       applicationCommandHandler = createApplicationCommandHandler(
         {
@@ -21,7 +21,7 @@ export default {
           publicKey: env.PUBLIC_KEY,
           botToken: env.BOT_TOKEN,
           commands: [helloCommand, deferredCommand],
-          components: {},
+          components: [],
           guildId: env.GUILD_ID,
           permissions: new Permissions([
             'AddReactions',
