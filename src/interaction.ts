@@ -18,10 +18,7 @@ import {
 
 export type InteractionResponse = Promise<APIInteractionResponse> | APIInteractionResponse;
 
-export type InteractionHandler = (
-  ctx: Context,
-  ...extra: any
-) => Promise<APIInteractionResponse | APIMessageComponentInteraction>;
+export type InteractionHandler = (ctx: Context, ...extra: any) => Promise<APIInteractionResponse>;
 
 class InvalidRequestError extends Error {
   constructor(message: string) {
