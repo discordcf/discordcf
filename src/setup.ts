@@ -1,4 +1,4 @@
-import { type RESTGetAPIApplicationCommandsResult, Routes, RouteBases } from './types';
+import { Routes, RouteBases } from './types';
 import type { Application, Command } from './handler';
 
 const resolveCommandsEndpoint = (applicationId: string, guildId?: string): string => {
@@ -9,14 +9,14 @@ const resolveCommandsEndpoint = (applicationId: string, guildId?: string): strin
 const deleteExistingCommands = async (applicationId: string, botToken: string, guildId?: string): Promise<void> => {
   const url = resolveCommandsEndpoint(applicationId, guildId);
 
-  const commands = await fetch(url, {
+  const commands: unknown[] = await fetch(url, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json', Authorization: `Bot ${botToken}` },
-  }).then(async (res) => await (res.json() as Promise<RESTGetAPIApplicationCommandsResult>));
+  }).then(async (res) => await res.json());
 
   await Promise.all(
     commands.map(
-      async (command) =>
+      async (command: any) =>
         await fetch(`${url}/${command.id}`, {
           method: 'DELETE',
           headers: { Authorization: `Bot ${botToken}` },
@@ -28,7 +28,7 @@ const deleteExistingCommands = async (applicationId: string, botToken: string, g
 interface CreateCommandsArgs {
   applicationId: string;
   guildId?: string;
-  commands: Array<Command<any>>;
+  commands: Command[];
 }
 
 const createCommands = async (
@@ -37,7 +37,7 @@ const createCommands = async (
 ): Promise<Response> => {
   const url = resolveCommandsEndpoint(applicationId, guildId);
 
-  const promises = commands.map(async ([command, _]) => {
+  const promises = commands.map(async ({ command }) => {
     try {
       const response = await fetch(url, {
         method: 'POST',

@@ -1,7 +1,10 @@
 import helloCommand from './cmd/hello';
 import { createApplicationCommandHandler, Permissions } from '@discordcf/framework';
+import deferredCommand from './cmd/deferred';
+import clickMePrimaryComponent from './components/click-me-primary';
+import clickMeCommand from './cmd/click-me';
 
-let applicationCommandHandler: (request: Request) => any;
+let applicationCommandHandler: (request: Request) => Promise<Response>;
 
 export interface Env {
   APPLICATION_ID: string;
@@ -12,26 +15,30 @@ export interface Env {
 }
 
 export default {
-  fetch: async (request: Request, env: Env, context: any): Promise<Response> => {
+  fetch: async (request: Request, env: Env, context: ExecutionContext): Promise<Response> => {
     if (!applicationCommandHandler) {
-      applicationCommandHandler = createApplicationCommandHandler({
-        applicationId: env.APPLICATION_ID,
-        publicKey: env.PUBLIC_KEY,
-        botToken: env.BOT_TOKEN,
-        commands: [helloCommand],
-        components: {},
-        guildId: env.GUILD_ID,
-        permissions: new Permissions([
-          'AddReactions',
-          'AttachFiles',
-          'EmbedLinks',
-          'SendMessages',
-          'SendTTSMessages',
-          'MentionEveryone',
-          'UseExternalEmojis',
-          'UseExternalStickers',
-        ]),
-      });
+      applicationCommandHandler = createApplicationCommandHandler(
+        {
+          applicationId: env.APPLICATION_ID,
+          publicKey: env.PUBLIC_KEY,
+          botToken: env.BOT_TOKEN,
+          commands: [helloCommand, deferredCommand, clickMeCommand],
+          components: [clickMePrimaryComponent],
+          guildId: env.GUILD_ID,
+          permissions: new Permissions([
+            'AddReactions',
+            'AttachFiles',
+            'EmbedLinks',
+            'SendMessages',
+            'SendTTSMessages',
+            'MentionEveryone',
+            'UseExternalEmojis',
+            'UseExternalStickers',
+          ]),
+        },
+        env,
+        context,
+      );
     }
     return applicationCommandHandler(request);
   },
