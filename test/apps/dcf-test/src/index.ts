@@ -3,6 +3,7 @@ import { createApplicationCommandHandler, Permissions } from '@discordcf/framewo
 import deferredCommand from './cmd/deferred';
 import clickMePrimaryComponent from './components/click-me-primary';
 import clickMeCommand from './cmd/click-me';
+import embedCommand from './cmd/embed';
 
 let applicationCommandHandler: (request: Request) => Promise<Response>;
 
@@ -22,7 +23,7 @@ export default {
           applicationId: env.APPLICATION_ID,
           publicKey: env.PUBLIC_KEY,
           botToken: env.BOT_TOKEN,
-          commands: [helloCommand, deferredCommand, clickMeCommand],
+          commands: [helloCommand, deferredCommand, clickMeCommand, embedCommand],
           components: [clickMePrimaryComponent],
           guildId: env.GUILD_ID,
           permissions: new Permissions([
