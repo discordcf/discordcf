@@ -2,7 +2,7 @@
 
 Build blazing fast Discord bots on top of Cloudflare Workers for free! :rocket:
 
-[Learn how to use discord.cf]().
+[Learn how to use discord.cf](https://beta-discordcf-org.pages.dev/en/learn/getting-started).
 
 ## Contributing
 
@@ -23,11 +23,11 @@ Licensed under the [Apache License 2.0](./LICENSE).
 These repo is brought to you by these people! [Join us on Discord](https://discord.com/invite/2v3NYMbWxy)!
 
 <a href="https://github.com/alvgaona">
-  <img style="width:3rem;height:3rem;border-radius:1.5rem" alt="alvgaona" title="alvgaona" src="https://avatars.githubusercontent.com/u/13088001?s=64">
+  <img alt="alvgaona" title="alvgaona" src="https://avatars.githubusercontent.com/u/13088001?s=64">
 </a>
 <a href="https://github.com/Inrixia">
-  <img style="width:3rem;height:3rem;border-radius:1.5rem;" alt="Inrixia" title="alvgaona" src="https://avatars.githubusercontent.com/u/6373693?s=64">
+  <img alt="Inrixia" title="alvgaona" src="https://avatars.githubusercontent.com/u/6373693?s=64">
 </a>
 <a href="https://github.com/gzalo">
-  <img style="width:3rem;height:3rem;border-radius:1.5rem;" alt="gzalo" title="gzalo" src="https://avatars.githubusercontent.com/u/538127?s=64">
+  <img alt="gzalo" title="gzalo" src="https://avatars.githubusercontent.com/u/538127?s=64">
 </a>
