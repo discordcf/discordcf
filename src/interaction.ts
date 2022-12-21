@@ -16,8 +16,6 @@ import {
   RESTPatchAPIInteractionOriginalResponseJSONBody,
 } from './types';
 
-export type InteractionResponse = Promise<APIInteractionResponse> | APIInteractionResponse;
-
 export type InteractionHandler = (ctx: Context, ...extra: any) => Promise<APIInteractionResponse>;
 
 class InvalidRequestError extends Error {

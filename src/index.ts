@@ -7,5 +7,5 @@ export {
 } from './handler';
 export * from './types';
 export { Permissions } from './permissions';
-export type { InteractionHandler as InteractioHandler, InteractionResponse, Interaction } from './interaction';
+export type { Interaction } from './interaction';
 export type { Context } from './context';
