@@ -2,12 +2,21 @@
   "name": "@discordcf/framework",
   "version": "0.1.0",
   "description": "A framework to build Discord Bots on top of Cloudflare Workers.",
+  "keywords": [
+    "discord",
+    "cloudflare",
+    "typescript",
+    "serveless",
+    "bots"
+  ],
   "author": "@discordcf",
   "license": "Apache License 2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "/dist"
+    "/dist",
+    "LICENSE",
+    "README.md"
   ],
   "eslintConfig": {
     "root": true,
@@ -16,9 +25,10 @@
       "prettier"
     ]
   },
+  "homepage": "https://beta-discordcf-org.pages.dev/",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:alvgaona/cloudflare-discord-bot.git"
+    "url": "https://github.com/discordcf/discordcf.git"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
