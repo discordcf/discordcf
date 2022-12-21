@@ -2,7 +2,7 @@
 
 Build blazing fast Discord bots on top of Cloudflare Workers for free! :rocket:
 
-[Learn how to use discord.cf](https://beta-discordcf-org.pages.dev/en/learn/getting-started).
+[Learn how to use discord.cf](https://beta-discordcf-org.pages.dev).
 
 ## Contributing
 
